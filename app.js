@@ -31,16 +31,19 @@ const sortFun = (arr, category = "name", order = "asc") => {
     } else if (category === "age" && order === "dsc") {
       return arr.sort((a, b) => b.age - a.age);
     }
+  } else {
+    return []
   }
 };
+console.log("sorting", sortFun([], "name", "asc"));
 console.log("sorting", sortFun(arrToSort, "name", "asc"));
 
 const arrReduce = ["a", "b", "c", "d"];
 
-const mapWithReduce = (arr) => {
+const mapWithReduce = (arr, multiplyBy) => {
   if (Array.isArray(arr)) {
     return arr.reduce((accum, current) => {
-      accum.push(current + current);
+      accum.push(current.repeat(multiplyBy));
       return accum;
     }, []);
   } else {
@@ -48,12 +51,14 @@ const mapWithReduce = (arr) => {
   }
 };
 
-console.log("map", mapWithReduce(arrReduce));
+console.log("map", mapWithReduce(arrReduce, 4));
 
-const filterWithReduce = (arr) => {
+const filterWithReduce = (arr, criterion = 'consonant') => {
   if (Array.isArray(arr)) {
     return arr.reduce((accum, current) => {
-      if (!!current.match(/[bcdfghjklmnpqrstvwxys]/)) {
+      if (!!current.match(/[bcdfghjklmnpqrstvwxys]/) && criterion === 'consonant') {
+        accum.push(current);
+      } else if (!!current.match(/[aeuio]/) && criterion === 'vowel') {
         accum.push(current);
       }
       return accum;
@@ -63,13 +68,15 @@ const filterWithReduce = (arr) => {
   }
 };
 
-console.log("filter", filterWithReduce(arrReduce));
+console.log("filter", filterWithReduce(arrReduce, 'consonant'));
 
-const everyWithReduce = (arr) => {
+const everyWithReduce = (arr, criterion = 'number') => {
   if (Array.isArray(arr)) {
     const arrToCompair = arr.reduce((accum, current) => {
-      if (isNaN(current)) {
+      if (isNaN(current) && criterion === 'number') {
         accum.push(current);
+      } else if (current === +current && current === 'string') {
+        accum.push(current)
       }
       return accum;
     }, []);
@@ -80,7 +87,7 @@ const everyWithReduce = (arr) => {
 };
 
 console.log("every", everyWithReduce(arrReduce));
-console.log("every", everyWithReduce([1, "a", "b"]));
+console.log("every", everyWithReduce([1, "a", "b"], 'string'));
 
 const someWithReduce = (arr, elemToFind) => {
   if (Array.isArray(arr)) {
@@ -97,12 +104,16 @@ const someWithReduce = (arr, elemToFind) => {
 
 console.log("some", someWithReduce([-1, -2, 0, 3, 2], 2));
 
-const findWithReduce = (arr) => {
+const findWithReduce = (arr, criterion = 'lower') => {
   if (Array.isArray(arr)) {
     let res;
     arr.reduce((accum, current) => {
-      if (current > 0) {
+      if (current < 0 && criterion === 'lower') {
         accum.push(current);
+      } else if (current > 0 && criterion === 'higher') {
+        accum.push(current);
+      } else if (current === 0 && criterion === 'equal') {
+        accum.push(current)
       }
       return (res = accum);
     }, []);
@@ -112,7 +123,7 @@ const findWithReduce = (arr) => {
   }
 };
 
-console.log("find", findWithReduce([-1, -2, 0, 3, 2]));
+console.log("find", findWithReduce([-1, -2, 0, 3, 2], 'lower'));
 
 const indexOfWithReduce = (arr, elemToFind) => {
   if (Array.isArray(arr)) {
