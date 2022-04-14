@@ -134,7 +134,6 @@ Array.prototype.reduceEvery = function (func) {
       }
       return acc;
     }, []);
-    console.log(arrToCompair, this);
     return arrToCompair.length === this.length;
   }
   return "error";
